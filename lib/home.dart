@@ -12,6 +12,44 @@ class _HomeState extends State<Home> {
 
   TextEditingController _controllerAlcool = TextEditingController();
   TextEditingController _controllerGasolina = TextEditingController();
+  String _textoResultado = "";
+
+  void _calcular(){
+
+    double? precoAlcool = double.tryParse(_controllerAlcool.text);
+    double? precoGasolina = double.tryParse(_controllerGasolina.text);
+
+
+    if( precoAlcool == null || precoGasolina == null) {
+      setState(() {
+        _textoResultado = "Número inválido, digite números maiores que 0 e utilizando (.)";
+      });
+    }else{
+
+      /*
+      * Se o preço do álcool divido pelo preço da gasolina
+      * for >= a 0.7 é melhor abastecer com gasolina
+      * senão é melhor utilizar álcool
+      * */
+
+      if((precoAlcool / precoGasolina) >= 0.7){
+        setState(() {
+          _textoResultado = "Melhor abastecer com gasolina";
+        });
+      }else{
+        setState(() {
+          _textoResultado = "Melhor abastecer com álcool";
+        });
+      }
+
+    }
+  }
+
+  /*
+   void _limparCampos(){
+    _controllerGasolina.clear();
+    _controllerAlcool.clear();
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +113,7 @@ class _HomeState extends State<Home> {
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.blue,
                   ),
-                  onPressed: (){},
+                  onPressed: _calcular,
                   child: const Text('Calcular',
                     style: TextStyle(
                       color: Colors.white,
@@ -84,11 +122,11 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: Text(
-                  "Resultado",
-                  style: TextStyle(
+                  _textoResultado,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
